@@ -45,29 +45,52 @@ test("Gameboard: receiveAttack - same co-ordinate", () => {
 	expect(gameBoard.receiveAttack("B-2")).toBeFalsy();
 });
 
-test("Gameboard: placeShip - right co-ordinate", () => {
+test("Gameboard: placeShip - right co-ordinate (y-axis)", () => {
 	const gameBoard = new Gameboard();
-	expect(gameBoard.placeShip(new Ship(3, "E-4", "V"))).toBeTruthy();
+	expect(gameBoard.placeShip(3, "E-4", "Destroyer", "V")).toBeTruthy();
+});
+
+test("Gameboard: placeShip - right co-ordinate (x-axis)", () => {
+	const gameBoard = new Gameboard();
+	expect(gameBoard.placeShip(3, "E-4", "Destroyer", "H")).toBeTruthy();
+});
+
+test("Gameboard: placeShip - right co-ordinate (No axis)", () => {
+	const gameBoard = new Gameboard();
+	expect(gameBoard.placeShip(3, "E-4", "Destroyer")).toBeTruthy();
+});
+
+// Need to add code from here
+test("Gameboard: placeShip - end of the ship goes out of bound (x-axis)", () => {
+	const gameBoard = new Gameboard();
+	expect(gameBoard.placeShip(3, "I-4", "Destroyer", "H")).toBeFalsy();
+});
+
+test("Gameboard: placeShip - end of the ship goes out of bound (y-axis)", () => {
+	const gameBoard = new Gameboard();
+	expect(gameBoard.placeShip(3, "A-10", "Destroyer", "V")).toBeFalsy();
 });
 
 test("Gameboard: placeShip - incorrect co-ordinate (x-axis)", () => {
 	const gameBoard = new Gameboard();
-	expect(gameBoard.placeShip(new Ship(3, "Y-4", "V"))).toBeFalsy();
+	expect(gameBoard.placeShip(3, "Y-4", "Destroyer", "V")).toBeFalsy();
 });
 
 test("Gameboard: placeShip - incorrect co-ordinate (y-axis)", () => {
 	const gameBoard = new Gameboard();
-	expect(gameBoard.placeShip(new Ship(3, "E--1", "V"))).toBeFalsy();
+	expect(gameBoard.placeShip(3, "E-11", "Destroyer", "V")).toBeFalsy();
 });
 
 test("Gameboard: placeShip - same co-ordinate", () => {
 	const gameBoard = new Gameboard();
-	gameBoard.placeShip(new Ship(3, "A-7", "V"));
-	expect(gameBoard.placeShip(new Ship(3, "A-7", "V"))).toBeFalsy();
+	gameBoard.placeShip(3, "A-7", "Destroyer", "V");
+	expect(gameBoard.placeShip(3, "A-7", "Destroyer", "V")).toBeFalsy();
 });
 
 test("Gameboard: placeShip - overlap check", () => {
 	const gameBoard = new Gameboard();
-	gameBoard.placeShip(new Ship(3, "A-7", "V"));
-	expect(gameBoard.placeShip(new Ship(3, "B-7", "V"))).toBeFalsy();
+	gameBoard.placeShip(3, "A-7", "Destroyer", "V");
+	expect(gameBoard.placeShip(3, "B-7", "Destroyer", "V")).toBeFalsy();
 });
+
+// No need to check for negative test cases like position having -1 etc as I am not allowing the user to enter the co-ordinates, rather letting them select the tile
