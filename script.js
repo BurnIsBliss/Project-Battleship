@@ -42,17 +42,10 @@ class Gameboard {
 	receiveAttack(coordinate) {}
 	placeShip(length, coordinate, name, alignment = "") {
 		const value = this.transformCoordinates(coordinate);
-		console.log(value);
 		if (value === false) {
 			console.log("Incorrect co-ordinates");
 			return value;
 		}
-		/*  1. Need to check whether the coordinate is already taken (This won't be necessary as we'll be restricting the same from the UI)
-			2. Need to check whether it can be placed vertically and horizontally
-			3. Need to check whether the tiles below/above/ side ways are not taken by other ships
-			4. Need to find a way to place the ship vertically and horizontally.
-			5. *The co-ordinate will the top/tip of the ship.
-		 */
 		if (
 			this.board[value[0]][value[1]] == 1 ||
 			this.board[value[0]][value[1]] == 2
@@ -61,12 +54,13 @@ class Gameboard {
 			return false;
 			// DRY (Can optimize at the end of the project)
 		} else {
-			// Need to add edge case checks
 			if (alignment.toLowerCase() == "v" || !alignment) {
+				// For vertical ship placement
 				let allCoordinates = [value];
 				let k = 0;
 				for (let i = 1; i < length; i += 1) {
 					if (value[1] + i >= 10) {
+						// Checking if the co-ordinate goes out of bounds
 						k = 1;
 						break;
 					} else if (this.board[value[0]][value[1] + i] == 0) {
@@ -77,7 +71,6 @@ class Gameboard {
 					}
 				}
 				if (!k) {
-					console.log(allCoordinates);
 					for (let [x, y] of allCoordinates) {
 						this.board[x][y] = 1;
 					}
@@ -85,10 +78,12 @@ class Gameboard {
 					return true;
 				}
 			} else {
+				// For horizontal ship placement
 				let allCoordinates = [value];
 				let k = 0;
 				for (let i = 1; i < length; i += 1) {
 					if (value[0] + i >= 10) {
+						// Checking if the co-ordinate goes out of bounds
 						k = 1;
 						break;
 					} else if (this.board[value[0] + i][value[1]] == 0) {
@@ -99,7 +94,6 @@ class Gameboard {
 					}
 				}
 				if (!k) {
-					console.log(allCoordinates);
 					for (let [x, y] of allCoordinates) {
 						this.board[x][y] = 1;
 					}
