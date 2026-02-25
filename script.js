@@ -7,7 +7,6 @@ class Ship {
 	4. Submarine: 3
 	5. Patrol Boat: 2
 	*/
-
 	constructor(length, coordinates, name) {
 		this.length = length;
 		this.numberOfHits = 0;
@@ -43,6 +42,11 @@ class Gameboard {
 	receiveAttack(coordinate) {}
 	placeShip(length, coordinate, name, alignment = "") {
 		const value = this.transformCoordinates(coordinate);
+		console.log(value);
+		if (value === false) {
+			console.log("Incorrect co-ordinates");
+			return value;
+		}
 		/*  1. Need to check whether the coordinate is already taken (This won't be necessary as we'll be restricting the same from the UI)
 			2. Need to check whether it can be placed vertically and horizontally
 			3. Need to check whether the tiles below/above/ side ways are not taken by other ships
@@ -55,16 +59,18 @@ class Gameboard {
 		) {
 			console.log("Unable to place ship, try another co-ordinate!");
 			return false;
-			// DRY
+			// DRY (Can optimize at the end of the project)
 		} else {
-			// Need to add edge checks
+			// Need to add edge case checks
 			if (alignment.toLowerCase() == "v" || !alignment) {
 				let allCoordinates = [value];
 				let k = 0;
 				for (let i = 1; i < length; i += 1) {
-					if (this.board[value[0]][value[1] + i] == 0) {
+					if (value[1] + i >= 10) {
+						k = 1;
+						break;
+					} else if (this.board[value[0]][value[1] + i] == 0) {
 						allCoordinates.push([value[0], value[1] + i]);
-						continue;
 					} else {
 						k = 1;
 						break;
@@ -82,9 +88,11 @@ class Gameboard {
 				let allCoordinates = [value];
 				let k = 0;
 				for (let i = 1; i < length; i += 1) {
-					if (this.board[value[0] + i][value[1]] == 0) {
+					if (value[0] + i >= 10) {
+						k = 1;
+						break;
+					} else if (this.board[value[0] + i][value[1]] == 0) {
 						allCoordinates.push([value[0] + i, value[1]]);
-						continue;
 					} else {
 						k = 1;
 						break;
@@ -107,6 +115,7 @@ class Gameboard {
 		}
 	}
 	calculateRemainingShips() {}
+	// Helper function to change the co-ordinate from 'B-1' to '[2, 1]'.
 	transformCoordinates(coordinate) {
 		const splitString = coordinate.split("-");
 		const keyValuePairs = {
@@ -121,7 +130,12 @@ class Gameboard {
 			I: 9,
 			J: 10,
 		};
-		return [keyValuePairs[splitString[0]], Number(splitString[1])];
+		if (Number(splitString[1]) > 10 || Number(splitString[1]) < 1)
+			return false; // Check to see if the y-axis value is out side the board
+		else if (keyValuePairs[splitString[0]] === undefined)
+			// Is this a  right approach? Checking a value against 'undefined'?
+			return false; // The x-axis value is not present in the keyValuePairs object
+		else return [keyValuePairs[splitString[0]], Number(splitString[1])];
 	}
 }
 

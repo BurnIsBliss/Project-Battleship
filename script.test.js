@@ -60,13 +60,12 @@ test("Gameboard: placeShip - right co-ordinate (No axis)", () => {
 	expect(gameBoard.placeShip(3, "E-4", "Destroyer")).toBeTruthy();
 });
 
-// Need to add code from here
-test("Gameboard: placeShip - end of the ship goes out of bound (x-axis)", () => {
+test("Gameboard: placeShip - end of the ship goes out of bounds (x-axis)", () => {
 	const gameBoard = new Gameboard();
 	expect(gameBoard.placeShip(3, "I-4", "Destroyer", "H")).toBeFalsy();
 });
 
-test("Gameboard: placeShip - end of the ship goes out of bound (y-axis)", () => {
+test("Gameboard: placeShip - end of the ship goes out of bounds (y-axis)", () => {
 	const gameBoard = new Gameboard();
 	expect(gameBoard.placeShip(3, "A-10", "Destroyer", "V")).toBeFalsy();
 });
@@ -89,8 +88,6 @@ test("Gameboard: placeShip - same co-ordinate", () => {
 
 test("Gameboard: placeShip - overlap check", () => {
 	const gameBoard = new Gameboard();
-	gameBoard.placeShip(3, "A-7", "Destroyer", "V");
+	gameBoard.placeShip(3, "A-7", "Destroyer", "H");
 	expect(gameBoard.placeShip(3, "B-7", "Destroyer", "V")).toBeFalsy();
 });
-
-// No need to check for negative test cases like position having -1 etc as I am not allowing the user to enter the co-ordinates, rather letting them select the tile
