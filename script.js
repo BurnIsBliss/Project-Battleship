@@ -8,7 +8,7 @@ class Ship {
 	5. Patrol Boat: 2
 	*/
 	constructor(length, coordinates, name) {
-		this.length = length;
+		this.shipLength = length;
 		this.numberOfHits = 0;
 		this.sunkValue = false;
 		this.name = name;
@@ -17,10 +17,11 @@ class Ship {
 
 	hit() {
 		this.numberOfHits += 1;
+		this.isSunk();
 	}
 
 	isSunk() {
-		if (this.length === this.numberOfHits) this.sunkValue = true;
+		if (this.shipLength === this.numberOfHits) this.sunkValue = true;
 	}
 }
 
@@ -28,18 +29,62 @@ class Gameboard {
 	constructor() {
 		this.board = this.createBoard();
 		this.ships = {};
-		this.sunkShips = 0;
+		this.sunkShips = [];
 	}
 	createBoard() {
 		let gameBoardArray = [];
-		// 0 - means empty, 1 - means occupied by ship, 2 - means hit
+		// 0 - means empty, 1 - means occupied by ship, 2 - means hit, 3 - means hit a ship
 		for (let i = 0; i < 10; i += 1) {
 			const arr = new Array(10).fill(0);
 			gameBoardArray[i] = arr;
 		}
 		return gameBoardArray;
 	}
-	receiveAttack(coordinate) {}
+	receiveAttack(coordinate) {
+		const value = this.transformCoordinates(coordinate);
+		if (!value) {
+			console.log(
+				"Please enter the correct co-ordinates to launch an attack! The entered co-ordinates does not exist.",
+			);
+			return false;
+		}
+		if (this.board[value[0]][value[1]] == 0) {
+			// If the co-ordinate misses the ship, but hits a valid cell.
+			console.log("Hit successful, MISSED the ship though!");
+			this.board[value[0]][value[1]] = 2;
+			return true;
+		} else if (this.board[value[0]][value[1]] == 2) {
+			// The co-ordinate has already been hit once.
+			console.log(
+				"This is an incorrect co-ordinate, as this cell has already been played!",
+			);
+			return false;
+		} else if (this.board[value[0]][value[1]] == 3) {
+			// The co-ordinate of a ship has already been hit.
+			console.log(
+				"This is an incorrect co-ordinate where a part of the ship was present, as this cell has already been played!",
+			);
+			return false;
+		} else {
+			// The co-ordinate of a ship is being hit for the first time.
+			this.board[value[0]][value[1]] = 3;
+			for (let key in this.ships) {
+				const shipCoordinates = this.ships[key].coordinates;
+				for (let [x, y] of shipCoordinates) {
+					if (x == value[0] && y == value[1]) {
+						this.ships[key].hit();
+						console.log("You've have hit a ship, Bravo!");
+					}
+				}
+				if (this.ships[key].sunkValue) {
+					this.sunkShips.push(this.ships[key]);
+					console.log(`The ${this.ships[key].name} has now sunk!!!`);
+				}
+			}
+			return true;
+		}
+		// How to keep track of ships that are attacked?
+	}
 	placeShip(length, coordinate, name, alignment = "") {
 		const value = this.transformCoordinates(coordinate);
 		if (value === false) {
@@ -48,7 +93,8 @@ class Gameboard {
 		}
 		if (
 			this.board[value[0]][value[1]] == 1 ||
-			this.board[value[0]][value[1]] == 2
+			this.board[value[0]][value[1]] == 2 ||
+			this.board[value[0]][value[1]] == 3
 		) {
 			console.log("Unable to place ship, try another co-ordinate!");
 			return false;
@@ -130,6 +176,14 @@ class Gameboard {
 			// Is this a  right approach? Checking a value against 'undefined'?
 			return false; // The x-axis value is not present in the keyValuePairs object
 		else return [keyValuePairs[splitString[0]], Number(splitString[1])];
+	}
+	// Get sunk skip name and count
+	getSunkShips() {
+		// console.log(this.sunkShips);
+		if (this.sunkShips.length) {
+			// console.log(this.sunkShips, this.sunkShips.length);
+			return true;
+		} else return false;
 	}
 }
 

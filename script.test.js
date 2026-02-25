@@ -45,6 +45,66 @@ test("Gameboard: receiveAttack - same co-ordinate", () => {
 	expect(gameBoard.receiveAttack("B-2")).toBeFalsy();
 });
 
+test("Gameboard: receiveAttack - Hit a ship (top) Horizontal", () => {
+	const gameBoard = new Gameboard();
+	gameBoard.placeShip(3, "B-2", "Destroyer", "H");
+	expect(gameBoard.receiveAttack("B-2")).toBeTruthy();
+});
+
+test("Gameboard: receiveAttack - Hit a ship (middle) Horizontal", () => {
+	const gameBoard = new Gameboard();
+	gameBoard.placeShip(3, "B-2", "Destroyer", "H");
+	expect(gameBoard.receiveAttack("C-2")).toBeTruthy();
+});
+
+test("Gameboard: receiveAttack - Hit a ship (bottom) Horizontal", () => {
+	const gameBoard = new Gameboard();
+	gameBoard.placeShip(3, "B-2", "Destroyer", "H");
+	expect(gameBoard.receiveAttack("D-2")).toBeTruthy();
+});
+
+test("Gameboard: receiveAttack - Hit a ship (top) Vertical", () => {
+	const gameBoard = new Gameboard();
+	gameBoard.placeShip(3, "B-2", "Destroyer", "V");
+	expect(gameBoard.receiveAttack("B-2")).toBeTruthy();
+});
+
+test("Gameboard: receiveAttack - Hit a ship (middle) Vertical", () => {
+	const gameBoard = new Gameboard();
+	gameBoard.placeShip(3, "B-2", "Destroyer", "V");
+	expect(gameBoard.receiveAttack("B-3")).toBeTruthy();
+});
+
+test("Gameboard: receiveAttack - Hit a ship (bottom) Vertical", () => {
+	const gameBoard = new Gameboard();
+	gameBoard.placeShip(3, "B-2", "Destroyer", "V");
+	expect(gameBoard.receiveAttack("B-4")).toBeTruthy();
+});
+
+test("Gameboard: receiveAttack - sink a ship having length 3 (Vertical)", () => {
+	const gameBoard = new Gameboard();
+	gameBoard.placeShip(3, "E-2", "Destroyer", "V");
+	gameBoard.receiveAttack("E-2");
+	gameBoard.receiveAttack("E-3");
+	gameBoard.receiveAttack("E-4");
+	expect(gameBoard.getSunkShips()).toBeTruthy();
+});
+
+test("Gameboard: receiveAttack - sink a ship having length 2 (Horizontal)", () => {
+	const gameBoard = new Gameboard();
+	gameBoard.placeShip(2, "C-3", "Patrol Boat", "H");
+	gameBoard.receiveAttack("D-3");
+	gameBoard.receiveAttack("C-3");
+	expect(gameBoard.getSunkShips()).toBeTruthy();
+});
+
+test("Gameboard: receiveAttack - same co-ordinate where a ship was previously present", () => {
+	const gameBoard = new Gameboard();
+	gameBoard.placeShip(3, "E-2", "Destroyer", "V");
+	gameBoard.receiveAttack("E-2");
+	expect(gameBoard.receiveAttack("E-2")).toBeFalsy();
+});
+
 test("Gameboard: placeShip - right co-ordinate (y-axis)", () => {
 	const gameBoard = new Gameboard();
 	expect(gameBoard.placeShip(3, "E-4", "Destroyer", "V")).toBeTruthy();
