@@ -12,7 +12,7 @@ class Ship {
 		this.numberOfHits = 0;
 		this.sunkValue = false;
 		this.name = name;
-		this.coordinates = coordinates; // might not be needed
+		this.coordinates = coordinates;
 	}
 
 	hit() {
@@ -154,7 +154,9 @@ class Gameboard {
 			}
 		}
 	}
-	calculateRemainingShips() {}
+	calculateRemainingShips() {
+		return this.sunkShips.length; // Number of ships that has sunk
+	}
 	// Helper function to change the co-ordinate from 'B-1' to '[2, 1]'.
 	transformCoordinates(coordinate) {
 		const splitString = coordinate.split("-");
@@ -187,4 +189,12 @@ class Gameboard {
 	}
 }
 
-export { Ship, Gameboard };
+class Player {
+	constructor(playerName = "") {
+		if (playerName) this.playerName = playerName;
+		else this.playerName = "Player1";
+		this.gameBoard = new Gameboard();
+	}
+}
+
+export { Ship, Gameboard, Player };
