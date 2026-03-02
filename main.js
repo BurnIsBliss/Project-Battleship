@@ -34,12 +34,24 @@ function getPlayer() {
 	submitButton.addEventListener("click", getNames);
 	function getNames() {
 		player1Name = document.querySelector("#player1").value;
-		player2Name = document.querySelector("#player2").value
-			? document.querySelector("#player2").value
-			: "Computer";
-		sessionStorage.setItem("Player1", player1Name);
-		sessionStorage.setItem("Player2", player2Name);
+		if (!player1Name) {
+			document.querySelector(".errorMessage").innerHTML =
+				"The above field is required.";
+		} else {
+			player2Name = document.querySelector("#player2").value
+				? document.querySelector("#player2").value
+				: "Computer";
+			sessionStorage.setItem("Player1", player1Name);
+			sessionStorage.setItem("Player2", player2Name);
+			const dialogElement = document.querySelector("#inputName");
+			dialogElement.close();
+		}
 	}
+}
+
+function displayGameboard(gameboardArr) {
+	const canvasElement = document.querySelector(".canvas");
+	canvasElement.remove();
 }
 
 (function () {
