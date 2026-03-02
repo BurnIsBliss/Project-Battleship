@@ -10,5 +10,24 @@
 	<body>
 		<h1 class="mainHeading">Project: Battleship</h1>
 		<div class="canvas"></div>
+		<dialog id="inputName">
+			<form action="">
+				<div class="heading">Enter Player Details</div>
+				<div>
+					<label for="player1">Enter Player 1 name: </label>
+					<input type="text" id="player1" name="player1" required />
+				</div>
+				<div>
+					<label for="player2">Enter Player 2 name: </label>
+					<input
+						type="text"
+						placeholder="Optional"
+						id="player2"
+						name="player2"
+					/>
+				</div>
+				<button type="submit" id="modalSubmit">Submit</button>
+			</form>
+		</dialog>
 	</body>
 </html>

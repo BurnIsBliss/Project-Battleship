@@ -14,6 +14,7 @@ body {
 		"Helvetica Neue",
 		sans-serif;
 	text-align: center;
+	margin: 0 150px;
 }
 
 .mainHeading {
@@ -23,7 +24,6 @@ body {
 
 .canvas {
 	border: 1px solid red;
-	margin: 0 150px;
 	font-size: 28px;
 	padding: 15px 0;
 	border-radius: 8px;
@@ -38,7 +38,7 @@ a:hover {
 	color: rgb(9, 255, 0);
 }
 
-button.start {
+button {
 	height: 50px;
 	width: 200px;
 	font-size: 28px;
@@ -49,4 +49,25 @@ button.start {
 button:hover {
 	background-color: grey;
 	color: black;
+}
+
+dialog {
+	border-radius: 8px;
+	padding: 15px 15px;
+	border: 2.5px solid blue;
+}
+
+form {
+	font-size: 28px;
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	align-items: center;
+}
+
+#player1,
+#player2 {
+	width: 150px;
+	height: 40px;
+	border-radius: 8px;
 }

@@ -1,7 +1,7 @@
 import { Ship, Gameboard, Player } from "./script.js";
 
 // Start game
-(function () {
+function startGame() {
 	const canvasElement = document.querySelector(".canvas");
 	function createDiv(text, childElement) {
 		const newDiv = document.createElement("div");
@@ -17,17 +17,33 @@ import { Ship, Gameboard, Player } from "./script.js";
 		canvasElement,
 	);
 	const buttonElement = document.createElement("button");
-	buttonElement.innerHTML = "Start game";
+	buttonElement.innerHTML = "Start";
 	buttonElement.setAttribute("class", "start");
 	canvasElement.appendChild(buttonElement);
 	buttonElement.addEventListener("click", () => {
 		getPlayer();
+		const dialogElement = document.querySelector("#inputName");
+		canvasElement.remove();
+		dialogElement.showModal();
 	});
-})();
+}
 // Function to input the name
 function getPlayer() {
-	console.log("print");
+	const submitButton = document.querySelector("#modalSubmit");
+	let player1Name, player2Name;
+	submitButton.addEventListener("click", getNames);
+	function getNames() {
+		player1Name = document.querySelector("#player1").value;
+		player2Name = document.querySelector("#player2").value
+			? document.querySelector("#player2").value
+			: "Computer";
+		sessionStorage.setItem("Player1", player1Name);
+		sessionStorage.setItem("Player2", player2Name);
+	}
 }
 
-// Might need to use the localStorage API
+(function () {
+	startGame();
+})();
+
 function createGameBoard(values) {}
