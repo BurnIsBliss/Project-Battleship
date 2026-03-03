@@ -187,13 +187,19 @@ class Gameboard {
 			return true;
 		} else return false;
 	}
+
+	getGameboard() {
+		return this.board;
+	}
 }
 
 class Player {
 	constructor(playerName = "") {
-		if (playerName) this.playerName = playerName;
-		else this.playerName = "Player1";
+		this.playerName = playerName;
 		this.gameBoard = new Gameboard();
+	}
+	returnGameboard() {
+		return this.gameBoard.getGameboard();
 	}
 }
 
