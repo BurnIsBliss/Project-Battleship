@@ -96,3 +96,21 @@ form {
 	justify-content: center;
 	align-items: center;
 }
+
+.playerBoard1 > .row,
+.playerBoard2 > .row {
+	font-size: 25px;
+	color: white;
+}
+
+.playerBoard1,
+.playerBoard2 {
+	font-size: 50px;
+	margin-bottom: 10px;
+}
+
+.mainContainer {
+	display: flex;
+	gap: 100px;
+	justify-content: center;
+}

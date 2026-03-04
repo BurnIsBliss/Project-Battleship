@@ -49,33 +49,61 @@ function getPlayer() {
 			dialogElement.close();
 			players.push(new Player(player1Name));
 			players.push(new Player(player2Name));
+			displayGameboards(
+				players[0].returnGameboard(),
+				players[1].returnGameboard(),
+			);
 		}
 	}
 }
 
-function displayGameboard(gameboardArr) {
-	const canvasElement = document.querySelector(".canvas");
-	for (let i = 1; i <= 11; i += 1) {
-		const divElement = document.createElement("div");
-		divElement.setAttribute("class", `row ${i}`);
-		for (let j = 1; j <= 11; j += 1) {
-			const cell = document.createElement("div");
-			cell.setAttribute(
-				"class",
-				`cell ${String(i) + "y"} ${String(j) + "x"}`,
-			);
-			if (i == 1 && j != 1) {
-				const letters = "ABCDEFGHIJ";
-				cell.innerHTML = letters[j - 2];
-				cell.setAttribute("style", "background-color : green");
-			} else if (j == 1 && i != 1) {
-				cell.innerHTML = i - 1;
-				cell.setAttribute("style", "background-color : indigo");
+function displayGameboards(gameboardArr1, gameboardArr2) {
+	const bodyElement = document.querySelector("body");
+	const mainContainer = document.createElement("div");
+	const playerBoard1 = document.createElement("div");
+	const playerBoard2 = document.createElement("div");
+	playerBoard1.innerHTML = "Your board";
+	mainContainer.setAttribute("class", "mainContainer");
+	playerBoard1.setAttribute("class", "playerBoard1");
+	mainContainer.appendChild(playerBoard1);
+	playerBoard2.innerHTML = "Opponents board";
+	playerBoard2.setAttribute("class", "playerBoard2");
+	mainContainer.appendChild(playerBoard2);
+	bodyElement.appendChild(mainContainer);
+	function displayGameboardHelper(arr, board, k = 0) {
+		for (let i = 1; i <= 11; i += 1) {
+			const divElement = document.createElement("div");
+			divElement.setAttribute("class", `row ${i}`);
+			for (let j = 1; j <= 11; j += 1) {
+				const cell = document.createElement("div");
+				cell.setAttribute(
+					"class",
+					`cell ${String(i) + "y"} ${String(j) + "x"}`,
+				);
+				if (i == 1 && j != 1) {
+					const letters = "ABCDEFGHIJ";
+					cell.innerHTML = letters[j - 2];
+					cell.setAttribute("style", "background-color : green");
+				} else if (j == 1 && i != 1) {
+					cell.innerHTML = i - 1;
+					cell.setAttribute("style", "background-color : indigo");
+				} else if (j >= 2 && i >= 2) {
+					if (!k) cell.innerHTML = arr[i - 2][j - 2];
+					else {
+						if (arr[i - 2][j - 2] == 0 || arr[i - 2][j - 2] == 1)
+							cell.innerHTML = "?";
+						else if (arr[i - 2][j - 2] == 2) cell.innerHTML == "X";
+						else cell.innerHTML == "H";
+					}
+				}
+				divElement.appendChild(cell);
 			}
-			divElement.appendChild(cell);
+			board.appendChild(divElement);
 		}
-		canvasElement.appendChild(divElement);
 	}
+	displayGameboardHelper(gameboardArr1, playerBoard1);
+	displayGameboardHelper(gameboardArr2, playerBoard2, 1);
+
 	// Need to display the player board so as to place their ships first
 	// During the start of the game the players must be able to see their board with their ships and,
 	// also the other players board with the hit maps
@@ -87,8 +115,7 @@ function checkGameStatus() {
 }
 
 (function () {
-	// startGame();
-	displayGameboard([]);
+	startGame();
 })();
 
 function createGameBoard(values) {}
