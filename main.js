@@ -49,15 +49,17 @@ function getPlayer() {
 			dialogElement.close();
 			players.push(new Player(player1Name));
 			players.push(new Player(player2Name));
-			displayGameboards(
-				players[0].returnGameboard(),
-				players[1].returnGameboard(),
-			);
+			// Loop through each ships for both player 1 and player 2 calling the placeShipOnBoard function
+			placeShipOnBoard(players[0], "Destroyer", 3);
+			// displayGameboards(
+			// 	players[0].returnGameboard(),
+			// 	players[1].returnGameboard(),
+			// );
 		}
 	}
 }
 
-function displayGameboards(gameboardArr1, gameboardArr2) {
+function displayGameboards(gameboardArr1, gameboardArr2 = []) {
 	const bodyElement = document.querySelector("body");
 	const mainContainer = document.createElement("div");
 	const playerBoard1 = document.createElement("div");
@@ -66,9 +68,6 @@ function displayGameboards(gameboardArr1, gameboardArr2) {
 	mainContainer.setAttribute("class", "mainContainer");
 	playerBoard1.setAttribute("class", "playerBoard1");
 	mainContainer.appendChild(playerBoard1);
-	playerBoard2.innerHTML = "Opponents board";
-	playerBoard2.setAttribute("class", "playerBoard2");
-	mainContainer.appendChild(playerBoard2);
 	bodyElement.appendChild(mainContainer);
 	function displayGameboardHelper(arr, board, k = 0) {
 		for (let i = 1; i <= 11; i += 1) {
@@ -102,11 +101,52 @@ function displayGameboards(gameboardArr1, gameboardArr2) {
 		}
 	}
 	displayGameboardHelper(gameboardArr1, playerBoard1);
-	displayGameboardHelper(gameboardArr2, playerBoard2, 1);
+	if (gameboardArr2.length) {
+		playerBoard2.innerHTML = "Opponents board";
+		playerBoard2.setAttribute("class", "playerBoard2");
+		mainContainer.appendChild(playerBoard2);
+		displayGameboardHelper(gameboardArr2, playerBoard2, 1);
+	}
 
 	// Need to display the player board so as to place their ships first
 	// During the start of the game the players must be able to see their board with their ships and,
 	// also the other players board with the hit maps
+}
+
+function placeShipOnBoard(player, ship, len) {
+	// make return text and a value
+	console.log(player.returnGameboard());
+	const dialogElement = document.querySelector("#shipPlacement");
+	dialogElement.showModal();
+	const headingElement = document.querySelector("#shipPlacement .heading");
+	headingElement.innerHTML = `Enter co-ordinates to place the ${ship} having a length of ${len}`;
+	const shipSubmitButton = document.querySelector("#shipSubmit");
+	shipSubmitButton.addEventListener("click", () => {
+		const regex = /[A-J][-]\d/;
+		const shipValue = document.querySelector("#ship").value;
+		const orientationValue = document.querySelector("#orientation").value;
+		if (regex.test(shipValue)) {
+			const result = player.gameBoard.placeShip(
+				len,
+				shipValue,
+				ship,
+				orientationValue,
+			);
+			if (result[1]) {
+				dialogElement.close();
+				displayGameboards(players[0].returnGameboard());
+			} else {
+				const shipErrorMessage =
+					document.querySelector("#shipErrorMessage");
+				shipErrorMessage.innerHTML = `Error!!! <br/>${result[0]}`;
+			}
+		} else {
+			const errorMessageElement = document.querySelector(
+				"#shipPlacement .errorMessage",
+			);
+			errorMessageElement.innerHTML = "Enter a valid co-ordinate!";
+		}
+	});
 }
 
 function checkGameStatus() {

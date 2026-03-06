@@ -15,7 +15,7 @@
 				<div class="heading">Enter Player Details</div>
 				<div>
 					<label for="player1">Enter Player 1 name: </label>
-					<input type="text" id="player1" name="player1" required />
+					<input type="text" id="player1" name="player1" />
 					<div class="errorMessage"></div>
 				</div>
 				<div>
@@ -28,6 +28,32 @@
 					/>
 				</div>
 				<button type="button" id="modalSubmit">Submit</button>
+			</form>
+		</dialog>
+		<dialog id="shipPlacement">
+			<form action="">
+				<div class="heading"></div>
+				<div>
+					<label for="ship">Enter your ship's co-ordinates</label>
+					<input
+						type="text"
+						id="ship"
+						name="ship"
+						placeholder="'E-7', 'A-4 etc."
+					/>
+					<div class="errorMessage"></div>
+				</div>
+				<div>
+					<label for="orientation">Enter ship's orientation: </label>
+					<input
+						type="text"
+						id="orientation"
+						name="orientation"
+						placeholder="'V' or 'H'"
+					/>
+				</div>
+				<button type="button" id="shipSubmit">Submit</button>
+				<div id="shipErrorMessage"></div>
 			</form>
 		</dialog>
 	</body>
