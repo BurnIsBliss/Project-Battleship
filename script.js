@@ -91,24 +91,26 @@ class Gameboard {
 			return ["Incorrect co-ordinates", value];
 		}
 		if (
-			this.board[value[0]][value[1]] == 1 ||
-			this.board[value[0]][value[1]] == 2 ||
-			this.board[value[0]][value[1]] == 3
+			this.board[value[0] - 1][value[1] - 1] == 1 ||
+			this.board[value[0] - 1][value[1] - 1] == 2 ||
+			this.board[value[0] - 1][value[1] - 1] == 3
 		) {
 			return ["Unable to place ship, try another co-ordinate!", false];
 			// DRY (Can optimize at the end of the project)
 		} else {
-			if (alignment.toLowerCase() == "v" || !alignment) {
-				// For vertical ship placement
-				let allCoordinates = [value];
+			if (alignment.toLowerCase() == "h") {
+				// For horizontal ship placement
+				let allCoordinates = [[value[0] - 1, value[1] - 1]];
 				let k = 0;
 				for (let i = 1; i < length; i += 1) {
-					if (value[1] + i >= 10) {
+					if (value[0] + i > 10) {
 						// Checking if the co-ordinate goes out of bounds
 						k = 1;
 						break;
-					} else if (this.board[value[0]][value[1] + i] == 0) {
-						allCoordinates.push([value[0], value[1] + i]);
+					} else if (
+						this.board[value[0] - 1 + i][value[1] - 1] == 0
+					) {
+						allCoordinates.push([value[0] - 1 + i, value[1] - 1]);
 					} else {
 						k = 1;
 						break;
@@ -127,16 +129,18 @@ class Gameboard {
 					];
 				}
 			} else {
-				// For horizontal ship placement
-				let allCoordinates = [value];
+				// For vertical ship placement
+				let allCoordinates = [[value[0] - 1, value[1] - 1]];
 				let k = 0;
 				for (let i = 1; i < length; i += 1) {
-					if (value[0] + i >= 10) {
+					if (value[1] + i > 10) {
 						// Checking if the co-ordinate goes out of bounds
 						k = 1;
 						break;
-					} else if (this.board[value[0] + i][value[1]] == 0) {
-						allCoordinates.push([value[0] + i, value[1]]);
+					} else if (
+						this.board[value[0] - 1][value[1] - 1 + i] == 0
+					) {
+						allCoordinates.push([value[0] - 1, value[1] - 1 + i]);
 					} else {
 						k = 1;
 						break;

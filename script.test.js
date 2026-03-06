@@ -142,8 +142,8 @@ test("Gameboard: placeShip - incorrect co-ordinate (y-axis)", () => {
 
 test("Gameboard: placeShip - same co-ordinate", () => {
 	const gameBoard = new Gameboard();
-	gameBoard.placeShip(3, "A-7", "Destroyer", "V");
-	expect(gameBoard.placeShip(3, "A-7", "Destroyer", "V")[1]).toBeFalsy();
+	gameBoard.placeShip(3, "A-7", "Destroyer");
+	expect(gameBoard.placeShip(3, "A-7", "Destroyer", "H")[1]).toBeFalsy();
 });
 
 test("Gameboard: placeShip - overlap check", () => {
