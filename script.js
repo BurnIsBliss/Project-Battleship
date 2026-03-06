@@ -88,16 +88,14 @@ class Gameboard {
 	placeShip(length, coordinate, name, alignment = "") {
 		const value = this.transformCoordinates(coordinate);
 		if (value === false) {
-			console.log("Incorrect co-ordinates");
-			return value;
+			return ["Incorrect co-ordinates", value];
 		}
 		if (
 			this.board[value[0]][value[1]] == 1 ||
 			this.board[value[0]][value[1]] == 2 ||
 			this.board[value[0]][value[1]] == 3
 		) {
-			console.log("Unable to place ship, try another co-ordinate!");
-			return false;
+			return ["Unable to place ship, try another co-ordinate!", false];
 			// DRY (Can optimize at the end of the project)
 		} else {
 			if (alignment.toLowerCase() == "v" || !alignment) {
@@ -121,7 +119,12 @@ class Gameboard {
 						this.board[x][y] = 1;
 					}
 					this.ships[name] = new Ship(length, allCoordinates, name);
-					return true;
+					return ["Ship placed successfully", true];
+				} else {
+					return [
+						"Could not add ship to the board as the required cells are already taken by other ships/out of bounds. Please try again with a different co-ordinate!",
+						false,
+					];
 				}
 			} else {
 				// For horizontal ship placement
@@ -144,12 +147,12 @@ class Gameboard {
 						this.board[x][y] = 1;
 					}
 					this.ships[name] = new Ship(length, allCoordinates, name);
-					return true;
+					return ["Ship placed successfully", true];
 				} else {
-					console.log(
-						"Could not add ship to the board as the required cells are already taken by other ships. Please try again with a different co-ordinate!",
-					);
-					return false;
+					return [
+						"Could not add ship to the board as the required cells are already taken by other ships/out of bounds. Please try again with a different co-ordinate!",
+						false,
+					];
 				}
 			}
 		}

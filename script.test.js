@@ -48,37 +48,37 @@ test("Gameboard: receiveAttack - same co-ordinate", () => {
 test("Gameboard: receiveAttack - Hit a ship (top) Horizontal", () => {
 	const gameBoard = new Gameboard();
 	gameBoard.placeShip(3, "B-2", "Destroyer", "H");
-	expect(gameBoard.receiveAttack("B-2")).toBeTruthy();
+	expect(gameBoard.receiveAttack("B-2")[1]).toBeTruthy();
 });
 
 test("Gameboard: receiveAttack - Hit a ship (middle) Horizontal", () => {
 	const gameBoard = new Gameboard();
 	gameBoard.placeShip(3, "B-2", "Destroyer", "H");
-	expect(gameBoard.receiveAttack("C-2")).toBeTruthy();
+	expect(gameBoard.receiveAttack("C-2")[1]).toBeTruthy();
 });
 
 test("Gameboard: receiveAttack - Hit a ship (bottom) Horizontal", () => {
 	const gameBoard = new Gameboard();
 	gameBoard.placeShip(3, "B-2", "Destroyer", "H");
-	expect(gameBoard.receiveAttack("D-2")).toBeTruthy();
+	expect(gameBoard.receiveAttack("D-2")[1]).toBeTruthy();
 });
 
 test("Gameboard: receiveAttack - Hit a ship (top) Vertical", () => {
 	const gameBoard = new Gameboard();
 	gameBoard.placeShip(3, "B-2", "Destroyer", "V");
-	expect(gameBoard.receiveAttack("B-2")).toBeTruthy();
+	expect(gameBoard.receiveAttack("B-2")[1]).toBeTruthy();
 });
 
 test("Gameboard: receiveAttack - Hit a ship (middle) Vertical", () => {
 	const gameBoard = new Gameboard();
 	gameBoard.placeShip(3, "B-2", "Destroyer", "V");
-	expect(gameBoard.receiveAttack("B-3")).toBeTruthy();
+	expect(gameBoard.receiveAttack("B-3")[1]).toBeTruthy();
 });
 
 test("Gameboard: receiveAttack - Hit a ship (bottom) Vertical", () => {
 	const gameBoard = new Gameboard();
 	gameBoard.placeShip(3, "B-2", "Destroyer", "V");
-	expect(gameBoard.receiveAttack("B-4")).toBeTruthy();
+	expect(gameBoard.receiveAttack("B-4")[1]).toBeTruthy();
 });
 
 test("Gameboard: receiveAttack - sink a ship having length 3 (Vertical)", () => {
@@ -107,47 +107,47 @@ test("Gameboard: receiveAttack - same co-ordinate where a ship was previously pr
 
 test("Gameboard: placeShip - right co-ordinate (y-axis)", () => {
 	const gameBoard = new Gameboard();
-	expect(gameBoard.placeShip(3, "E-4", "Destroyer", "V")).toBeTruthy();
+	expect(gameBoard.placeShip(3, "E-4", "Destroyer", "V")[1]).toBeTruthy();
 });
 
 test("Gameboard: placeShip - right co-ordinate (x-axis)", () => {
 	const gameBoard = new Gameboard();
-	expect(gameBoard.placeShip(3, "E-4", "Destroyer", "H")).toBeTruthy();
+	expect(gameBoard.placeShip(3, "E-4", "Destroyer", "H")[1]).toBeTruthy();
 });
 
 test("Gameboard: placeShip - right co-ordinate (No axis)", () => {
 	const gameBoard = new Gameboard();
-	expect(gameBoard.placeShip(3, "E-4", "Destroyer")).toBeTruthy();
+	expect(gameBoard.placeShip(3, "E-4", "Destroyer")[1]).toBeTruthy();
 });
 
 test("Gameboard: placeShip - end of the ship goes out of bounds (x-axis)", () => {
 	const gameBoard = new Gameboard();
-	expect(gameBoard.placeShip(3, "I-4", "Destroyer", "H")).toBeFalsy();
+	expect(gameBoard.placeShip(3, "I-4", "Destroyer", "H")[1]).toBeFalsy();
 });
 
 test("Gameboard: placeShip - end of the ship goes out of bounds (y-axis)", () => {
 	const gameBoard = new Gameboard();
-	expect(gameBoard.placeShip(3, "A-10", "Destroyer", "V")).toBeFalsy();
+	expect(gameBoard.placeShip(3, "A-10", "Destroyer", "V")[1]).toBeFalsy();
 });
 
 test("Gameboard: placeShip - incorrect co-ordinate (x-axis)", () => {
 	const gameBoard = new Gameboard();
-	expect(gameBoard.placeShip(3, "Y-4", "Destroyer", "V")).toBeFalsy();
+	expect(gameBoard.placeShip(3, "Y-4", "Destroyer", "V")[1]).toBeFalsy();
 });
 
 test("Gameboard: placeShip - incorrect co-ordinate (y-axis)", () => {
 	const gameBoard = new Gameboard();
-	expect(gameBoard.placeShip(3, "E-11", "Destroyer", "V")).toBeFalsy();
+	expect(gameBoard.placeShip(3, "E-11", "Destroyer", "V")[1]).toBeFalsy();
 });
 
 test("Gameboard: placeShip - same co-ordinate", () => {
 	const gameBoard = new Gameboard();
 	gameBoard.placeShip(3, "A-7", "Destroyer", "V");
-	expect(gameBoard.placeShip(3, "A-7", "Destroyer", "V")).toBeFalsy();
+	expect(gameBoard.placeShip(3, "A-7", "Destroyer", "V")[1]).toBeFalsy();
 });
 
 test("Gameboard: placeShip - overlap check", () => {
 	const gameBoard = new Gameboard();
 	gameBoard.placeShip(3, "A-7", "Destroyer", "H");
-	expect(gameBoard.placeShip(3, "B-7", "Destroyer", "V")).toBeFalsy();
+	expect(gameBoard.placeShip(3, "B-7", "Destroyer", "V")[1]).toBeFalsy();
 });
