@@ -133,7 +133,7 @@ class Gameboard {
 				let allCoordinates = [[value[1] - 1, value[0] - 1]];
 				let k = 0;
 				for (let i = 1; i < length; i += 1) {
-					if (value[1] + i > 10) {
+					if (value[0] + i > 10) {
 						// Checking if the co-ordinate goes out of bounds
 						k = 1;
 						break;
