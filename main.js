@@ -1,18 +1,20 @@
 import { Ship, Gameboard, Player } from "./script.js";
 
-const players = [];
+const players = []; // To store the player1 and player2 objects
 const shipCollection = {
+	// Object with ship name and their corresponding length
 	Carrier: 5,
 	Battleship: 4,
 	Destroyer: 3,
 	Submarine: 3,
 	"Patrol Boat": 2,
 };
-const ships = Object.keys(shipCollection);
+const ships = Object.keys(shipCollection); // List with only the ship names
 
 // Start game
 function startGame() {
 	const canvasElement = document.querySelector(".canvas");
+	// Helper function for div creation
 	function createDiv(text, childElement) {
 		const newDiv = document.createElement("div");
 		newDiv.innerHTML = `${text}`;
@@ -37,52 +39,58 @@ function startGame() {
 		dialogElement.showModal();
 	});
 }
-// Function to input the name
+// Function to input the names of the players
 function getPlayer() {
 	const submitButton = document.querySelector("#modalSubmit");
 	let player1Name, player2Name;
 	submitButton.addEventListener("click", getNames);
+	// Helper function to get the names of the players
 	function getNames() {
 		player1Name = document.querySelector("#player1").value;
 		if (!player1Name) {
+			// If player 1 name is empty, show error
 			document.querySelector(".errorMessage").innerHTML =
 				"The above field is required.";
 		} else {
+			// If player 2 name is empty, set it as 'Computer'
 			player2Name = document.querySelector("#player2").value
 				? document.querySelector("#player2").value
 				: "Computer";
+			// Add both these values to session storage
 			sessionStorage.setItem("Player1", player1Name);
 			sessionStorage.setItem("Player2", player2Name);
 			const dialogElement = document.querySelector("#inputName");
 			dialogElement.close();
 			players.push(new Player(player1Name));
 			players.push(new Player(player2Name));
+
+			// DOM manipulation for adding the ships (Could have been a standalone function!)
 			const bodyElement = document.querySelector("body");
 			const headingElement = document.createElement("h2");
-			headingElement.textContent = `'${players[0].playerName}' place your ships by clicking the below button.`;
+			headingElement.textContent = `'Player ${players[0].playerName}' place your ships by clicking the below button.`;
 			bodyElement.appendChild(headingElement);
 			const buttonElement = document.createElement("button");
 			buttonElement.setAttribute("type", "button");
 			let i = 0;
 			buttonElement.textContent = `Place a ship`;
-			buttonElement.setAttribute("class", "shipPlacementButton");
 			bodyElement.appendChild(buttonElement);
-			document
-				.querySelector(".shipPlacementButton")
-				.addEventListener("click", () => {
-					placeShipOnBoard(
-						players[0],
-						ships[i],
-						shipCollection[ships[i]],
-					);
-					buttonElement.textContent = `Place a ship`;
-					i += 1;
-					if (i == 5) buttonElement.remove();
-				});
+			buttonElement.addEventListener("click", () => {
+				placeShipOnBoard(
+					players[0],
+					ships[i],
+					shipCollection[ships[i]],
+				);
+				buttonElement.textContent = `Place a ship`;
+				i += 1;
+				if (i == 5) buttonElement.remove();
+			});
+			// Need to display the board before placing ships
+			displayGameboards(players[0]);
 		}
 	}
 }
 
+// Function to display the gameboard of both players individually (if player2 == null) and together
 function displayGameboards(player1, player2 = null) {
 	const bodyElement = document.querySelector("body");
 	const prevMainContainer = document.querySelectorAll(".mainContainer");
@@ -135,10 +143,6 @@ function displayGameboards(player1, player2 = null) {
 		mainContainer.appendChild(playerBoard2);
 		displayGameboardHelper(player2.returnGameboard(), playerBoard2, 1);
 	}
-
-	// Need to display the player board so as to place their ships first
-	// During the start of the game the players must be able to see their board with their ships and,
-	// also the other players board with the hit maps
 }
 
 function placeShipOnBoard(player, ship, len) {
@@ -173,11 +177,15 @@ function placeShipOnBoard(player, ship, len) {
 				dialogElement.close();
 				displayGameboards(player);
 				shipSubmitButton.removeEventListener("click", placeShipHelper);
+				if (ship == "Patrol Boat") {
+					document.querySelector("h2").textContent =
+						`Player ${players[0].playerName}' has placed all their ships successfully!!!`;
+					document.querySelector(".mainContainer").remove();
+				}
 			} else {
 				const shipErrorMessage =
 					document.querySelector("#shipErrorMessage");
 				shipErrorMessage.innerHTML = `Error!!! <br/>${result[0]}`;
-				console.log(player.returnGameboard());
 			}
 		} else {
 			const errorMessageElement = document.querySelector(
