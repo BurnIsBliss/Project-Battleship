@@ -67,7 +67,7 @@ function getPlayer() {
 			// DOM manipulation for adding the ships (Could have been a standalone function!)
 			const bodyElement = document.querySelector("body");
 			const headingElement = document.createElement("h2");
-			headingElement.textContent = `'Player ${players[0].playerName}' place your ships by clicking the below button.`;
+			headingElement.textContent = `Player '${players[0].playerName}' place your ships by clicking the below button.`;
 			bodyElement.appendChild(headingElement);
 			const buttonElement = document.createElement("button");
 			buttonElement.setAttribute("type", "button");
@@ -82,7 +82,17 @@ function getPlayer() {
 				);
 				buttonElement.textContent = `Place a ship`;
 				i += 1;
-				if (i == 5) buttonElement.remove();
+				if (i == 5) {
+					buttonElement.remove();
+					// Place computer ships randomly
+					if (players[1].playerName == "Computer") {
+						for (let shipName in shipCollection)
+							placeComputerShips(
+								shipCollection[shipName],
+								shipName,
+							);
+					}
+				}
 			});
 			// Need to display the board before placing ships
 			displayGameboards(players[0]);
@@ -179,8 +189,9 @@ function placeShipOnBoard(player, ship, len) {
 				shipSubmitButton.removeEventListener("click", placeShipHelper);
 				if (ship == "Patrol Boat") {
 					document.querySelector("h2").textContent =
-						`Player ${players[0].playerName}' has placed all their ships successfully!!!`;
+						`Player '${players[0].playerName}' has placed all their ships successfully!!!`;
 					document.querySelector(".mainContainer").remove();
+					displayGameboards(players[1]);
 				}
 			} else {
 				const shipErrorMessage =
@@ -194,6 +205,23 @@ function placeShipOnBoard(player, ship, len) {
 			errorMessageElement.innerHTML = "Enter a valid co-ordinate!";
 		}
 	}
+}
+
+function placeComputerShips(len, ship) {
+	const randomNumber1 = Math.floor(Math.random() * 10);
+	const randomNumber2 = Math.floor(Math.random() * 10);
+	const orientationValue = Math.floor(Math.random() * 2) ? "V" : "H";
+	const alphabets = "ABCDEFGHIJ";
+	const shipValue = `${alphabets[randomNumber1]}-${randomNumber2}`;
+	const result = players[1].gameBoard.placeShip(
+		len,
+		shipValue,
+		ship,
+		orientationValue,
+	);
+	if (!result[1]) placeComputerShips(len, ship);
+	else sessionStorage.setItem(ship, [shipValue, orientationValue]);
+	return;
 }
 
 function checkGameStatus() {
