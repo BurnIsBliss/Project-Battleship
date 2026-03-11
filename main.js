@@ -174,6 +174,11 @@ function placeShipOnBoard(player, ship, len) {
 				orientationValue,
 			);
 			if (result[1]) {
+				// Adding the co-ordinates to session storage
+				sessionStorage.setItem(ship + ` ${players[0].playerName}`, [
+					shipValue,
+					orientationValue,
+				]);
 				const shipErrorMessage =
 					document.querySelector("#shipErrorMessage");
 				shipErrorMessage.innerHTML = "";
@@ -200,7 +205,7 @@ function placeShipOnBoard(player, ship, len) {
 						const bodyElement = document.querySelector("body");
 						bodyElement.removeChild(bodyElement.lastChild);
 						document.querySelector("h2").innerHTML =
-							`Player ${players[1].playerName} has successfully placed all their ships!`;
+							`Player '${players[1].playerName}' has successfully placed all their ships!`;
 					}
 				}
 			} else {
@@ -230,7 +235,11 @@ function placeComputerShips(len, ship) {
 		orientationValue,
 	);
 	if (!result[1]) placeComputerShips(len, ship);
-	else sessionStorage.setItem(ship, [shipValue, orientationValue]);
+	else
+		sessionStorage.setItem(ship + ` ${players[1].playerName}`, [
+			shipValue,
+			orientationValue,
+		]);
 	return;
 }
 
@@ -248,11 +257,41 @@ function player2ShipPlacement() {
 	});
 }
 
+// Need to remove afterwards
+function placePlayer1Ships(len, ship) {
+	const randomNumber1 = Math.floor(Math.random() * 10);
+	const randomNumber2 = Math.floor(Math.random() * 10);
+	const orientationValue = Math.floor(Math.random() * 2) ? "V" : "H";
+	const alphabets = "ABCDEFGHIJ";
+	const shipValue = `${alphabets[randomNumber1]}-${randomNumber2}`;
+	const result = players[0].gameBoard.placeShip(
+		len,
+		shipValue,
+		ship,
+		orientationValue,
+	);
+	if (!result[1]) placeComputerShips(len, ship);
+	else
+		sessionStorage.setItem(ship + ` ${players[0].playerName}`, [
+			shipValue,
+			orientationValue,
+		]);
+	return;
+}
+
 function checkGameStatus() {
 	// This function checks where the player are at currently after doing a page refresh
 	// Because after doing a page refresh, the user must not go back to the starting screen
 }
 
 (function () {
-	startGame();
+	// startGame();
+	players.push(new Player("Human"));
+	players.push(new Player("Computer"));
+	for (let ship in shipCollection) {
+		placeComputerShips(shipCollection[ship], ship);
+		placePlayer1Ships(shipCollection[ship], ship);
+	}
+	displayGameboards(players[0]);
+	// displayGameboards(players[1]);
 })();
