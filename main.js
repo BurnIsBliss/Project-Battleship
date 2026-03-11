@@ -80,7 +80,6 @@ function getPlayer() {
 					ships[i],
 					shipCollection[ships[i]],
 				);
-				buttonElement.textContent = `Place a ship`;
 				i += 1;
 				if (i == 5) {
 					buttonElement.remove();
@@ -188,10 +187,21 @@ function placeShipOnBoard(player, ship, len) {
 				displayGameboards(player);
 				shipSubmitButton.removeEventListener("click", placeShipHelper);
 				if (ship == "Patrol Boat") {
-					document.querySelector("h2").textContent =
-						`Player '${players[0].playerName}' has placed all their ships successfully!!!`;
-					document.querySelector(".mainContainer").remove();
-					displayGameboards(players[1]);
+					if (players[1] == "Computer") {
+						document.querySelector("h2").textContent =
+							`Player '${players[0].playerName}' has placed all their ships successfully!!!`;
+						document.querySelector(".mainContainer").remove();
+					} else if (player != players[1]) {
+						document.querySelector("h2").innerHTML =
+							`Player '${players[0].playerName}' has placed all their ships successfully!!! <br/> Player '${players[1].playerName}' place your ships now!`;
+						document.querySelector(".mainContainer").remove();
+						player2ShipPlacement();
+					} else if (player == players[1]) {
+						const bodyElement = document.querySelector("body");
+						bodyElement.removeChild(bodyElement.lastChild);
+						document.querySelector("h2").innerHTML =
+							`Player ${players[1].playerName} has successfully placed all their ships!`;
+					}
 				}
 			} else {
 				const shipErrorMessage =
@@ -224,6 +234,20 @@ function placeComputerShips(len, ship) {
 	return;
 }
 
+function player2ShipPlacement() {
+	const bodyElement = document.querySelector("body");
+	const buttonElement = document.createElement("button");
+	buttonElement.textContent = "Place a ship";
+	bodyElement.appendChild(buttonElement);
+	displayGameboards(players[1]);
+	let i = 0;
+	buttonElement.addEventListener("click", () => {
+		placeShipOnBoard(players[1], ships[i], shipCollection[ships[i]]);
+		i += 1;
+		if (i == 5) buttonElement.remove();
+	});
+}
+
 function checkGameStatus() {
 	// This function checks where the player are at currently after doing a page refresh
 	// Because after doing a page refresh, the user must not go back to the starting screen
@@ -232,5 +256,3 @@ function checkGameStatus() {
 (function () {
 	startGame();
 })();
-
-function createGameBoard(values) {}
