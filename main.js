@@ -147,7 +147,7 @@ function displayGameboards(player1, player2 = null) {
 	}
 	displayGameboardHelper(player1.returnGameboard(), playerBoard1);
 	if (player2) {
-		playerBoard2.innerHTML = "Opponents board";
+		playerBoard2.innerHTML = `${player2.playerName}'s board`;
 		playerBoard2.setAttribute("class", "playerBoard2");
 		mainContainer.appendChild(playerBoard2);
 		displayGameboardHelper(player2.returnGameboard(), playerBoard2, 1);
@@ -270,7 +270,7 @@ function placePlayer1Ships(len, ship) {
 		ship,
 		orientationValue,
 	);
-	if (!result[1]) placeComputerShips(len, ship);
+	if (!result[1]) placePlayer1Ships(len, ship);
 	else
 		sessionStorage.setItem(ship + ` ${players[0].playerName}`, [
 			shipValue,
@@ -292,6 +292,6 @@ function checkGameStatus() {
 		placeComputerShips(shipCollection[ship], ship);
 		placePlayer1Ships(shipCollection[ship], ship);
 	}
-	displayGameboards(players[0]);
+	displayGameboards(players[0], players[1]);
 	// displayGameboards(players[1]);
 })();
