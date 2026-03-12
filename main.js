@@ -296,12 +296,37 @@ function addAttackFunctionality(playerToBeAttacked) {
 					playerToBeAttacked.gameBoard.receiveAttack(coordinate);
 				console.log(result[0]);
 				if (result[1]) {
+					const canvasElement = document.querySelector(".canvas");
 					if (playerToBeAttacked == players[1]) {
-						displayGameboards(players[1], players[0]);
-						addAttackFunctionality(players[0]);
+						canvasElement.textContent =
+							`${players[0].playerName}: ` + result[0];
+						document.querySelector(".mainContainer").remove();
+						if (
+							playerToBeAttacked.gameBoard.calculateRemainingShips() ==
+							5
+						) {
+							canvasElement.textContent = `${players[0].playerName} has won the game! CONGRATULATIONS!!!!!`;
+							return;
+						}
+						setTimeout(() => {
+							displayGameboards(players[1], players[0]);
+							addAttackFunctionality(players[0]);
+						}, 1500);
 					} else {
-						displayGameboards(players[0], players[1]);
-						addAttackFunctionality(players[1]);
+						canvasElement.textContent =
+							`${players[1].playerName}: ` + result[0];
+						document.querySelector(".mainContainer").remove();
+						if (
+							playerToBeAttacked.gameBoard.calculateRemainingShips() ==
+							5
+						) {
+							canvasElement.textContent = `${players[1].playerName} has won the game! CONGRATULATIONS!!!!!`;
+							return;
+						}
+						setTimeout(() => {
+							displayGameboards(players[0], players[1]);
+							addAttackFunctionality(players[1]);
+						}, 1500);
 					}
 				}
 			}
@@ -321,3 +346,5 @@ function addAttackFunctionality(playerToBeAttacked) {
 	addAttackFunctionality(players[1]);
 	// displayGameboards(players[1]);
 })();
+
+// Just display obe board, and also check for the final condition
