@@ -66,7 +66,8 @@ class Gameboard {
 			];
 		} else {
 			let sunkStatus = false;
-			let key;
+			let key,
+				k = 0;
 			// The co-ordinate of a ship is being hit for the first time.
 			this.board[value[1]][value[0]] = 3;
 			for (key in this.ships) {
@@ -74,11 +75,15 @@ class Gameboard {
 				for (let [x, y] of shipCoordinates) {
 					if (x == value[1] && y == value[0]) {
 						this.ships[key].hit();
+						k = 1;
+						break;
 					}
 				}
+				if (k) break;
 			}
 			if (this.ships[key].sunkValue) {
 				this.sunkShips.push(this.ships[key]);
+				console.log(this.sunkShips);
 				sunkStatus = true;
 			}
 			if (sunkStatus)

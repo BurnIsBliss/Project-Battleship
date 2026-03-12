@@ -136,8 +136,9 @@ function displayGameboards(player1, player2 = null) {
 					else {
 						if (arr[i - 2][j - 2] == 0 || arr[i - 2][j - 2] == 1)
 							cell.innerHTML = "?";
-						else if (arr[i - 2][j - 2] == 2) cell.innerHTML == "X";
-						else cell.innerHTML == "H";
+						else if (arr[i - 2][j - 2] == 2) {
+							cell.innerHTML = "X";
+						} else cell.innerHTML = "H";
 					}
 				}
 				divElement.appendChild(cell);
@@ -279,12 +280,7 @@ function placePlayer1Ships(len, ship) {
 	return;
 }
 
-function checkGameStatus() {
-	// This function checks where the player are at currently after doing a page refresh
-	// Because after doing a page refresh, the user must not go back to the starting screen
-}
-
-function addAttackFunctionality(playerToBeAttacked, nextPlayer) {
+function addAttackFunctionality(playerToBeAttacked) {
 	const allCells = document.querySelectorAll(".playerBoard2 .cell");
 	allCells.forEach((cell) => {
 		cell.addEventListener("click", () => {
@@ -296,10 +292,18 @@ function addAttackFunctionality(playerToBeAttacked, nextPlayer) {
 				const y = Number(value[0]) - 1;
 				const alphabets = "ABCDEFGHIJ";
 				const coordinate = alphabets[x] + "-" + String(y);
-				console.log(coordinate);
 				const result =
 					playerToBeAttacked.gameBoard.receiveAttack(coordinate);
 				console.log(result[0]);
+				if (result[1]) {
+					if (playerToBeAttacked == players[1]) {
+						displayGameboards(players[1], players[0]);
+						addAttackFunctionality(players[0]);
+					} else {
+						displayGameboards(players[0], players[1]);
+						addAttackFunctionality(players[1]);
+					}
+				}
 			}
 		});
 	});
@@ -314,6 +318,6 @@ function addAttackFunctionality(playerToBeAttacked, nextPlayer) {
 		placePlayer1Ships(shipCollection[ship], ship);
 	}
 	displayGameboards(players[0], players[1]);
-	addAttackFunctionality(players[1], players[0]);
+	addAttackFunctionality(players[1]);
 	// displayGameboards(players[1]);
 })();
