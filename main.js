@@ -100,16 +100,13 @@ function getPlayer() {
 }
 
 // Function to display the gameboard of both players individually (if player2 == null) and together
-function displayGameboards(player1, player2 = null) {
+function displayGameboards(player, l = 0) {
 	const bodyElement = document.querySelector("body");
 	const prevMainContainer = document.querySelectorAll(".mainContainer");
 	if (prevMainContainer.length) prevMainContainer[0].remove();
 	const mainContainer = document.createElement("div");
 	const playerBoard1 = document.createElement("div");
-	const playerBoard2 = document.createElement("div");
-	playerBoard1.innerHTML = !player2
-		? `${player1.playerName}'s Board`
-		: "Your Board";
+	playerBoard1.innerHTML = `${player.playerName}'s Board`;
 	mainContainer.setAttribute("class", "mainContainer");
 	playerBoard1.setAttribute("class", "playerBoard1");
 	mainContainer.appendChild(playerBoard1);
@@ -146,13 +143,7 @@ function displayGameboards(player1, player2 = null) {
 			board.appendChild(divElement);
 		}
 	}
-	displayGameboardHelper(player1.returnGameboard(), playerBoard1);
-	if (player2) {
-		playerBoard2.innerHTML = `${player2.playerName}'s board`;
-		playerBoard2.setAttribute("class", "playerBoard2");
-		mainContainer.appendChild(playerBoard2);
-		displayGameboardHelper(player2.returnGameboard(), playerBoard2, 1);
-	}
+	displayGameboardHelper(player.returnGameboard(), playerBoard1, l);
 }
 
 function placeShipOnBoard(player, ship, len) {
@@ -193,10 +184,16 @@ function placeShipOnBoard(player, ship, len) {
 				displayGameboards(player);
 				shipSubmitButton.removeEventListener("click", placeShipHelper);
 				if (ship == "Patrol Boat") {
-					if (players[1] == "Computer") {
+					if (players[1].playerName == "Computer") {
 						document.querySelector("h2").textContent =
 							`Player '${players[0].playerName}' has placed all their ships successfully!!!`;
 						document.querySelector(".mainContainer").remove();
+						setTimeout(() => {
+							displayGameboards(players[1], 1);
+							addAttackFunctionality(players[1]);
+							document.querySelector("h2").textContent =
+								"The game starts now.";
+						}, 1500);
 					} else if (player != players[1]) {
 						document.querySelector("h2").innerHTML =
 							`Player '${players[0].playerName}' has placed all their ships successfully!!! <br/> Player '${players[1].playerName}' place your ships now!`;
@@ -207,6 +204,12 @@ function placeShipOnBoard(player, ship, len) {
 						bodyElement.removeChild(bodyElement.lastChild);
 						document.querySelector("h2").innerHTML =
 							`Player '${players[1].playerName}' has successfully placed all their ships!`;
+						setTimeout(() => {
+							displayGameboards(players[1], 1);
+							addAttackFunctionality(players[1]);
+							document.querySelector("h2").textContent =
+								"The game starts now.";
+						}, 1500);
 					}
 				}
 			} else {
@@ -281,7 +284,7 @@ function placePlayer1Ships(len, ship) {
 }
 
 function addAttackFunctionality(playerToBeAttacked) {
-	const allCells = document.querySelectorAll(".playerBoard2 .cell");
+	const allCells = document.querySelectorAll(".playerBoard1 .cell");
 	allCells.forEach((cell) => {
 		cell.addEventListener("click", () => {
 			const value = cell.getAttribute("class").substring(5).split(" ");
@@ -294,37 +297,38 @@ function addAttackFunctionality(playerToBeAttacked) {
 				const coordinate = alphabets[x] + "-" + String(y);
 				const result =
 					playerToBeAttacked.gameBoard.receiveAttack(coordinate);
-				console.log(result[0]);
 				if (result[1]) {
-					const canvasElement = document.querySelector(".canvas");
+					const h2Element = document.querySelector("h2");
 					if (playerToBeAttacked == players[1]) {
-						canvasElement.textContent =
-							`${players[0].playerName}: ` + result[0];
+						h2Element.textContent =
+							`Message to ${players[0].playerName} regarding the other player: ` +
+							result[0];
 						document.querySelector(".mainContainer").remove();
 						if (
 							playerToBeAttacked.gameBoard.calculateRemainingShips() ==
 							5
 						) {
-							canvasElement.textContent = `${players[0].playerName} has won the game! CONGRATULATIONS!!!!!`;
+							h2Element.textContent = `${players[0].playerName} has won the game! CONGRATULATIONS!!!!!`;
 							return;
 						}
 						setTimeout(() => {
-							displayGameboards(players[1], players[0]);
+							displayGameboards(players[0], 1);
 							addAttackFunctionality(players[0]);
 						}, 1500);
 					} else {
-						canvasElement.textContent =
-							`${players[1].playerName}: ` + result[0];
+						h2Element.textContent =
+							`Message to ${players[1].playerName} regarding the other player: ` +
+							result[0];
 						document.querySelector(".mainContainer").remove();
 						if (
 							playerToBeAttacked.gameBoard.calculateRemainingShips() ==
 							5
 						) {
-							canvasElement.textContent = `${players[1].playerName} has won the game! CONGRATULATIONS!!!!!`;
+							h2Element.textContent = `${players[1].playerName} has won the game! CONGRATULATIONS!!!!!`;
 							return;
 						}
 						setTimeout(() => {
-							displayGameboards(players[0], players[1]);
+							displayGameboards(players[1], 1);
 							addAttackFunctionality(players[1]);
 						}, 1500);
 					}
@@ -335,16 +339,13 @@ function addAttackFunctionality(playerToBeAttacked) {
 }
 
 (function () {
-	// startGame();
-	players.push(new Player("Human"));
-	players.push(new Player("Computer"));
-	for (let ship in shipCollection) {
-		placeComputerShips(shipCollection[ship], ship);
-		placePlayer1Ships(shipCollection[ship], ship);
-	}
-	displayGameboards(players[0], players[1]);
-	addAttackFunctionality(players[1]);
-	// displayGameboards(players[1]);
+	startGame();
+	// players.push(new Player("Human"));
+	// players.push(new Player("Computer"));
+	// for (let ship in shipCollection) {
+	// 	placeComputerShips(shipCollection[ship], ship);
+	// 	placePlayer1Ships(shipCollection[ship], ship);
+	// }
+	// displayGameboards(players[1], 1);
+	// addAttackFunctionality(players[1]);
 })();
-
-// Just display obe board, and also check for the final condition
