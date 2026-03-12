@@ -77,7 +77,6 @@ class Gameboard {
 					}
 				}
 			}
-			console.log(this.ships[key].sunkValue);
 			if (this.ships[key].sunkValue) {
 				this.sunkShips.push(this.ships[key]);
 				sunkStatus = true;

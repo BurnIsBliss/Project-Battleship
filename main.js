@@ -284,6 +284,27 @@ function checkGameStatus() {
 	// Because after doing a page refresh, the user must not go back to the starting screen
 }
 
+function addAttackFunctionality(playerToBeAttacked, nextPlayer) {
+	const allCells = document.querySelectorAll(".playerBoard2 .cell");
+	allCells.forEach((cell) => {
+		cell.addEventListener("click", () => {
+			const value = cell.getAttribute("class").substring(5).split(" ");
+			value[0] = value[0].replace("y", "");
+			value[1] = value[1].replace("x", "");
+			if (!(Number(value[0]) == 1) && !(Number(value[1]) == 1)) {
+				const x = Number(value[1]) - 2;
+				const y = Number(value[0]) - 1;
+				const alphabets = "ABCDEFGHIJ";
+				const coordinate = alphabets[x] + "-" + String(y);
+				console.log(coordinate);
+				const result =
+					playerToBeAttacked.gameBoard.receiveAttack(coordinate);
+				console.log(result[0]);
+			}
+		});
+	});
+}
+
 (function () {
 	// startGame();
 	players.push(new Player("Human"));
@@ -293,5 +314,6 @@ function checkGameStatus() {
 		placePlayer1Ships(shipCollection[ship], ship);
 	}
 	displayGameboards(players[0], players[1]);
+	addAttackFunctionality(players[1], players[0]);
 	// displayGameboards(players[1]);
 })();
