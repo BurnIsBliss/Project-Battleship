@@ -1,4 +1,4 @@
-import { Ship, Gameboard, Player } from "./script.js";
+import { Player } from "./script.js";
 
 const players = []; // To store the player1 and player2 objects
 const shipCollection = {
@@ -99,7 +99,7 @@ function getPlayer() {
 	}
 }
 
-// Function to display the gameboard of both players individually (if player2 == null) and together
+// Function to display the gameboard players, with the coordinates shown and hidden
 function displayGameboards(player, l = 0) {
 	const bodyElement = document.querySelector("body");
 	const prevMainContainer = document.querySelectorAll(".mainContainer");
@@ -202,7 +202,7 @@ function placeShipOnBoard(player, ship, len) {
 							displayGameboards(players[1], 1);
 							addAttackFunctionality(players[1]);
 							document.querySelector("h2").textContent =
-								"The game starts now.";
+								"The game starts now. ATTACK>>>>>>";
 						}, 1500);
 					} else if (player != players[1]) {
 						document.querySelector("h2").innerHTML =
@@ -218,7 +218,7 @@ function placeShipOnBoard(player, ship, len) {
 							displayGameboards(players[1], 1);
 							addAttackFunctionality(players[1]);
 							document.querySelector("h2").textContent =
-								"The game starts now.";
+								"The game starts now. ATTACK>>>>>>";
 						}, 1500);
 					}
 				}
@@ -311,10 +311,10 @@ function addAttackFunctionality(playerToBeAttacked) {
 				if (result[1]) {
 					const h2Element = document.querySelector("h2");
 					if (
+						// For playing against each other - 1
 						playerToBeAttacked == players[1] &&
 						players[1].playerName != "Computer"
 					) {
-						console.log(1);
 						h2Element.textContent =
 							`Player ${players[0].playerName} has played and, ` +
 							result[0] +
@@ -332,10 +332,10 @@ function addAttackFunctionality(playerToBeAttacked) {
 							addAttackFunctionality(players[0]);
 						}, 1500);
 					} else if (
+						// For playing against computer
 						playerToBeAttacked == players[1] &&
 						players[1].playerName == "Computer"
 					) {
-						console.log("2");
 						h2Element.textContent =
 							`Player ${players[0].playerName} has played and, ` +
 							result[0];
@@ -365,7 +365,7 @@ function addAttackFunctionality(playerToBeAttacked) {
 							}, 1500);
 						}, 2500);
 					} else {
-						console.log("3");
+						// For playing against each other - 2
 						h2Element.textContent =
 							`Player ${players[1].playerName} has played and, ` +
 							result[0] +
