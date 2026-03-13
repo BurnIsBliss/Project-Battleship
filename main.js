@@ -364,6 +364,7 @@ function addAttackFunctionality(playerToBeAttacked) {
 								addAttackFunctionality(players[1]);
 							}, 1500);
 						}, 2500);
+						console.log(players[0].returnGameboard());
 					} else {
 						// For playing against each other - 2
 						h2Element.textContent =
@@ -401,6 +402,7 @@ function randomComputerAttack() {
 	const result = players[0].gameBoard.receiveAttack(randomCoordinate);
 	let newResult = false;
 	if (!result[1]) newResult = randomComputerAttack();
+	console.log(randomCoordinate);
 	if (newResult) return newResult;
 	else return result;
 }
