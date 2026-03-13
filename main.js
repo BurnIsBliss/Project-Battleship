@@ -135,7 +135,17 @@ function displayGameboards(player, l = 0) {
 							cell.innerHTML = "?";
 						else if (arr[i - 2][j - 2] == 2) {
 							cell.innerHTML = "X";
-						} else cell.innerHTML = "H";
+							cell.setAttribute(
+								"style",
+								"background-color : yellow; color: black",
+							);
+						} else {
+							cell.innerHTML = "H";
+							cell.setAttribute(
+								"style",
+								"background-color : red",
+							);
+						}
 					}
 				}
 				divElement.appendChild(cell);
@@ -261,7 +271,7 @@ function player2ShipPlacement() {
 	});
 }
 
-// Need to remove afterwards
+// Need to remove afterwards, as this function was used for populating player1 ships randomly for testing purposes
 function placePlayer1Ships(len, ship) {
 	const randomNumber1 = Math.floor(Math.random() * 10);
 	const randomNumber2 = Math.floor(Math.random() * 10);
@@ -283,6 +293,7 @@ function placePlayer1Ships(len, ship) {
 	return;
 }
 
+// Function to add attacking capabilities for the tiles
 function addAttackFunctionality(playerToBeAttacked) {
 	const allCells = document.querySelectorAll(".playerBoard1 .cell");
 	allCells.forEach((cell) => {
@@ -299,10 +310,15 @@ function addAttackFunctionality(playerToBeAttacked) {
 					playerToBeAttacked.gameBoard.receiveAttack(coordinate);
 				if (result[1]) {
 					const h2Element = document.querySelector("h2");
-					if (playerToBeAttacked == players[1]) {
+					if (
+						playerToBeAttacked == players[1] &&
+						players[1].playerName != "Computer"
+					) {
+						console.log(1);
 						h2Element.textContent =
-							`Message to ${players[0].playerName} regarding the other player: ` +
-							result[0];
+							`Player ${players[0].playerName} has played and, ` +
+							result[0] +
+							" Next player's turn ->";
 						document.querySelector(".mainContainer").remove();
 						if (
 							playerToBeAttacked.gameBoard.calculateRemainingShips() ==
@@ -315,10 +331,45 @@ function addAttackFunctionality(playerToBeAttacked) {
 							displayGameboards(players[0], 1);
 							addAttackFunctionality(players[0]);
 						}, 1500);
-					} else {
+					} else if (
+						playerToBeAttacked == players[1] &&
+						players[1].playerName == "Computer"
+					) {
+						console.log("2");
 						h2Element.textContent =
-							`Message to ${players[1].playerName} regarding the other player: ` +
+							`Player ${players[0].playerName} has played and, ` +
 							result[0];
+						setTimeout(() => {
+							const computerResult = randomComputerAttack();
+							h2Element.textContent =
+								`Player ${players[1].playerName} has played and, ` +
+								`${computerResult[0]}` +
+								" Next player's turn ->";
+							document.querySelector(".mainContainer").remove();
+							if (
+								playerToBeAttacked.gameBoard.calculateRemainingShips() ==
+								5
+							) {
+								h2Element.textContent = `${players[0].playerName} has won the game! CONGRATULATIONS!!!!!`;
+								return;
+							} else if (
+								players[0].gameBoard.calculateRemainingShips() ==
+								5
+							) {
+								h2Element.textContent = `${players[1].playerName} has won the game! CONGRATULATIONS!!!!!`;
+								return;
+							}
+							setTimeout(() => {
+								displayGameboards(players[1], 1);
+								addAttackFunctionality(players[1]);
+							}, 1500);
+						}, 2500);
+					} else {
+						console.log("3");
+						h2Element.textContent =
+							`Player ${players[1].playerName} has played and, ` +
+							result[0] +
+							" Next player's turn ->";
 						document.querySelector(".mainContainer").remove();
 						if (
 							playerToBeAttacked.gameBoard.calculateRemainingShips() ==
@@ -332,20 +383,28 @@ function addAttackFunctionality(playerToBeAttacked) {
 							addAttackFunctionality(players[1]);
 						}, 1500);
 					}
+				} else {
+					const h2Element = document.querySelector("h2");
+					h2Element.textContent =
+						result[0] + ", try a different co-ordinate.";
 				}
 			}
 		});
 	});
 }
 
+function randomComputerAttack() {
+	const randomNumber1 = Math.floor(Math.random() * 10);
+	const randomNumber2 = Math.floor(Math.random() * 10);
+	const alphabets = "ABCDEFGHIJ";
+	const randomCoordinate = `${alphabets[randomNumber1]}-${randomNumber2}`;
+	const result = players[0].gameBoard.receiveAttack(randomCoordinate);
+	let newResult = false;
+	if (!result[1]) newResult = randomComputerAttack();
+	if (newResult) return newResult;
+	else return result;
+}
+
 (function () {
 	startGame();
-	// players.push(new Player("Human"));
-	// players.push(new Player("Computer"));
-	// for (let ship in shipCollection) {
-	// 	placeComputerShips(shipCollection[ship], ship);
-	// 	placePlayer1Ships(shipCollection[ship], ship);
-	// }
-	// displayGameboards(players[1], 1);
-	// addAttackFunctionality(players[1]);
 })();
