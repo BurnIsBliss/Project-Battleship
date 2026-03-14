@@ -177,7 +177,7 @@ function placeShipOnBoard(player, ship, len) {
 			);
 			if (result[1]) {
 				// Adding the co-ordinates to session storage
-				sessionStorage.setItem(ship + ` ${players[0].playerName}`, [
+				sessionStorage.setItem(ship + ` ${player.playerName}`, [
 					shipValue,
 					orientationValue,
 				]);
